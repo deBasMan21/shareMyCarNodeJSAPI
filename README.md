@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="https://img.shields.io/badge/javascript-339933.svg?style=for-the-badge&logo=javascript&logoColor=yellow"/>
+  <img src="https://img.shields.io/badge/javascript-339933.svg?style=for-the-badge&logo=javascript&logoColor=white"/>
   <img src="https://img.shields.io/badge/Mocha-339933?style=for-the-badge&logo=mocha&logoColor=white"/>
   <img src="https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white"/>
   <br/>
