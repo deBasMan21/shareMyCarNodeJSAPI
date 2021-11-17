@@ -1,0 +1,10 @@
+{
+  "hosting": {
+    "public": "dist/sharemycarapi",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ]
+  }
+}
