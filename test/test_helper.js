@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
 
 before((done) => {
-    mongoose.connect('mongodb://localhost/sharemycar');
+    mongoose.connect('mongodb://localhost/testdb');
     mongoose.connection
         .once('open', () => { done(); })
         .on('error', (error) => {
@@ -12,14 +12,12 @@ before((done) => {
 });
 
 beforeEach((done) => {
-    // const { cars, rides, users } = mongoose.connection.collection;
+    const { cars, rides, users } = mongoose.connection.collections;
 
-    // cars.drop(() => {
-    //     rides.drop(() => {
-    //         users.drop(() => {
-    //             done();
-    //         });
-    //     });
-    // });
-    done();
+    Promise.all([
+        cars.drop(),
+        rides.drop(),
+        users.drop()
+    ])
+        .then(() => done());
 });

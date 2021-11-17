@@ -1,3 +1,5 @@
+const User = require('../src/User');
+const Ride = require('../src/Ride');
 const Car = require('../src/Car');
 
 module.exports = {
@@ -27,11 +29,27 @@ module.exports = {
         const id = req.params.id;
 
         Car.findById({ _id: id })
+            .populate({
+                path: 'reservations',
+                model: 'ride',
+                populate: {
+                    path: 'user',
+                    model: 'user'
+                }
+            })
             .then((car) => res.send(car))
             .catch(next);
     },
     getAllCars(req, res, next) {
         Car.find()
+            .populate({
+                path: 'reservations',
+                model: 'ride',
+                populate: {
+                    path: 'user',
+                    model: 'user'
+                }
+            })
             .then((cars) => res.send(cars))
             .catch(next);
     }
