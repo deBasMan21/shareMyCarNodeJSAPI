@@ -12,7 +12,7 @@ before((done) => {
 });
 
 beforeEach((done) => {
-    const { cars, rides, users } = mongoose.connection.collection;
+    // const { cars, rides, users } = mongoose.connection.collection;
 
     // cars.drop(() => {
     //     rides.drop(() => {
