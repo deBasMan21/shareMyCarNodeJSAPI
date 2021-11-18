@@ -47,3 +47,6 @@ Thumbs.db
 
 # Firebase Deployment Files
 .firebase
+
+# Dotenv file
+.env
