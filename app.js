@@ -7,7 +7,6 @@ const app = express();
 
 mongoose.Promise = global.Promise;
 if (process.env.NODE_ENV !== 'test') {
-    // mongoose.connect('mongodb://localhost/sharemycar');
     console.log(process.env.NODE_ENV);
     if (process.env.NODE_ENV === 'dev') {
         mongoose.connect(process.env.DEV_CONNECTION_STRING);
