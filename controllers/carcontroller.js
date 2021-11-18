@@ -5,6 +5,7 @@ const Car = require('../src/Car');
 module.exports = {
     addCar(req, res, next) {
         const carProps = req.body;
+        delete carProps._id;
         Car.create(carProps)
             .then(car => res.send(car))
             .catch(next);
