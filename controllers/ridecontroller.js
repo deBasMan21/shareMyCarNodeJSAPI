@@ -12,13 +12,15 @@ module.exports = {
     addRide(req, res, next) {
         const carId = req.params.id;
         const rideProps = req.body;
+        rideProps.reservationDateTime = Date.now();
+
         Ride.create(rideProps)
             .then(ride => {
                 Car.findById({ _id: carId })
                     .then(car => {
                         car.reservations.push(ride);
                         car.save();
-                        res.send({ succeeded: true });
+                        res.send(ride);
                     })
                     .catch(next);
             })

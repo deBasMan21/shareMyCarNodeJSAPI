@@ -2,11 +2,23 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const RideSchema = new Schema({
-    name: String,
-    beginDateTime: Date,
-    endDateTime: Date,
+    name: {
+        type: String,
+        required: true
+    },
+    beginDateTime: {
+        type: Date,
+        required: true
+    },
+    endDateTime: {
+        type: Date,
+        required: true
+    },
     destination: {
-        name: String,
+        name: {
+            type: String,
+            required: true
+        },
         address: String,
         zipCode: String,
         city: String
