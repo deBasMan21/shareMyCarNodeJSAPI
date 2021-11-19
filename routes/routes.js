@@ -11,6 +11,8 @@ module.exports = (app) => {
     app.post('/api/car/:id/ride', ridecontroller.addRide);
     app.delete('/api/car/:carId/ride/:rideId', ridecontroller.removeRide);
 
+    app.get('/api/ride/:id/car', carcontroller.getCarForRide);
+
     app.put('/api/ride/:id', ridecontroller.updateRide);
     app.get('/api/ride/:id', ridecontroller.getRideById);
 }

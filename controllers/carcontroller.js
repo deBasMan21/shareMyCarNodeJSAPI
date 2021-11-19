@@ -53,5 +53,22 @@ module.exports = {
             })
             .then((cars) => res.send(cars))
             .catch(next);
+    },
+    getCarForRide(req, res, next) {
+        const rideId = req.params.id;
+
+        Car.find({ "reservations": { "$in": [rideId] } })
+            .populate({
+                path: 'reservations',
+                model: 'ride',
+                populate: {
+                    path: 'user',
+                    model: 'user'
+                }
+            })
+            .then((ride) => {
+                res.send(ride);
+            })
+            .catch(next);
     }
 };

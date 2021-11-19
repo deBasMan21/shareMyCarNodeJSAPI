@@ -19,7 +19,7 @@ const RideSchema = new Schema({
   user: {
     type: Schema.Types.ObjectId,
     ref: "user",
-    default: [],
+    default: null,
   },
   reservationDateTime: {
     type: Date,
