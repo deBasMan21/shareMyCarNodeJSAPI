@@ -57,7 +57,7 @@ module.exports = {
     getCarForRide(req, res, next) {
         const rideId = req.params.id;
 
-        Car.find({ "reservations": { "$in": [rideId] } })
+        Car.findOne({ "reservations": { "$in": [rideId] } })
             .populate({
                 path: 'reservations',
                 model: 'ride',
