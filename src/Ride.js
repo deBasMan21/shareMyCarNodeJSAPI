@@ -19,8 +19,12 @@ const RideSchema = new Schema({
   user: {
     type: Schema.Types.ObjectId,
     ref: "user",
+    default: [],
   },
-  reservationDateTime: Date,
+  reservationDateTime: {
+    type: Date,
+    default: Date.now(),
+  },
 });
 
 const Ride = mongoose.model("ride", RideSchema);

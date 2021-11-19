@@ -19,6 +19,7 @@ const CarSchema = new Schema({
     {
       type: Schema.Types.ObjectId,
       ref: "ride",
+      default: [],
     },
   ],
 });
