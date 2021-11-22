@@ -17,9 +17,12 @@ const UserSchema = new Schema({
       type: Schema.Types.ObjectId,
       ref: "car",
       default: [],
+      autopopulate: true
     },
   ],
 });
+
+UserSchema.plugin(require('mongoose-autopopulate'));
 
 const User = mongoose.model("user", UserSchema);
 

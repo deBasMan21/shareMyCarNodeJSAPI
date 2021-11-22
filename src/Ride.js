@@ -20,12 +20,15 @@ const RideSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: "user",
     default: null,
+    autopopulate: false
   },
   reservationDateTime: {
     type: Date,
     default: Date.now(),
   },
 });
+
+RideSchema.plugin(require('mongoose-autopopulate'));
 
 const Ride = mongoose.model("ride", RideSchema);
 

@@ -20,9 +20,12 @@ const CarSchema = new Schema({
       type: Schema.Types.ObjectId,
       ref: "ride",
       default: [],
+      autopopulate: true
     },
   ],
 });
+
+CarSchema.plugin(require('mongoose-autopopulate'));
 
 const Car = mongoose.model("car", CarSchema);
 

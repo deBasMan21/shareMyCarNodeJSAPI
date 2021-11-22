@@ -26,12 +26,12 @@ class CrudController {
     }
 
     getAll = async (req, res, next) => {
-        const entities = await this.model.find().populate('reservations');
+        const entities = await this.model.find();
         res.send(entities);
     }
 
     getById = async (req, res, next) => {
-        const entity = await this.model.findById({ _id: req.params.id }).populate('reservations');
+        const entity = await this.model.findById({ _id: req.params.id });
         res.send(entity);
     }
 
