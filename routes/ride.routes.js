@@ -6,12 +6,15 @@ const CrudController = require('../controllers/crudcontroller');
 const rideCrudController = new CrudController(Ride);
 
 const carController = require('../controllers/carcontroller');
+const ridecontroller = require('../controllers/ridecontroller');
 
 
 //More advanced functions on ride
 //get car for a specific ride
 router.get('/:id/car', carController.getCarForRide);
 
+//get all rides for user
+router.get('', ridecontroller.getRidesForUser);
 
 //CRUD on ride
 //add ride

@@ -6,6 +6,8 @@ const cors = require('cors');
 const mongoose = require('mongoose');
 const app = express();
 
+const tokenValidator = require('./controllers/authenticationcontroller')
+
 //enable cors for webapp
 app.use(cors());
 
@@ -39,11 +41,13 @@ const userRoutes = require('./routes/user.routes');
 //use authenticationroutes for login
 app.use('/api', userRoutes)
 
+
+
 //use carroutes for car
-app.use('/api/car', carRoutes);
+app.use('/api/car', tokenValidator.validate, carRoutes);
 
 //use rideroutes for rides
-app.use('/api/ride', rideRoutes);
+app.use('/api/ride', tokenValidator.validate, rideRoutes);
 
 //error handling
 app.use((err, req, res, next) => {
@@ -52,6 +56,7 @@ app.use((err, req, res, next) => {
 
 //no endpoint
 app.use('*', (req, res, next) => {
+
     res.send({ error: 'could not find endpoint' });
 });
 

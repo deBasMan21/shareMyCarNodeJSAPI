@@ -53,5 +53,19 @@ module.exports = {
     },
     register(req, res, next) {
 
+    },
+    validate(req, res, next) {
+        try {
+            const token = req.headers.authorization.substring(7);
+            jwt.verify(token, RSA_PRIVATE_KEY, {
+                algorithms: ['RS256']
+            }, (err, result) => {
+                User.findById(result.sub).then((user) => {
+                    next();
+                });
+            });
+        } catch (err) {
+            res.status(401).send({ message: "not authorized" });
+        }
     }
 }

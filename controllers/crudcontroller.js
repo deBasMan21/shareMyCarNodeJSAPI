@@ -1,18 +1,16 @@
 const User = require('../src/User');
 const Ride = require('../src/Ride');
 const Car = require('../src/Car');
+const fs = require('fs');
+
+const jwt = require('node-jsonwebtoken');
+
+const RSA_PRIVATE_KEY = fs.readFileSync('jwtRS256.key');
 
 
 class CrudController {
     constructor(model) {
         this.model = model;
-    }
-
-    add = async (req, res, next) => {
-        delete req.body._id;
-        const entity = new this.model(req.body);
-        await entity.save();
-        res.send(entity);
     }
 
     update = async (req, res, next) => {
