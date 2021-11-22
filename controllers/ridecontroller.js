@@ -6,6 +6,7 @@ module.exports = {
     addRide(req, res, next) {
         const carId = req.params.id;
         const rideProps = req.body;
+        delete rideProps._id;
         rideProps.reservationDateTime = Date.now();
 
         Ride.create(rideProps)
