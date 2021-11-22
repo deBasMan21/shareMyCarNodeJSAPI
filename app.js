@@ -33,6 +33,11 @@ app.use('*', (req, res, next) => {
 //require routes
 const carRoutes = require('./routes/car.routes');
 const rideRoutes = require('./routes/ride.routes');
+const userRoutes = require('./routes/user.routes');
+
+
+//use authenticationroutes for login
+app.use('/api', userRoutes)
 
 //use carroutes for car
 app.use('/api/car', carRoutes);
