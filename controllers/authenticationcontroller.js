@@ -67,5 +67,15 @@ module.exports = {
         } catch (err) {
             res.status(401).send({ message: "not authorized" });
         }
+    },
+    getUser(req, res, next) {
+        const token = req.headers.authorization.substring(7);
+        jwt.verify(token, RSA_PRIVATE_KEY, {
+            algorithms: ['RS256']
+        }, (err, result) => {
+            User.findById(result.sub).then((user) => {
+                res.send(user);
+            });
+        });
     }
 }
