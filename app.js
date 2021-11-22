@@ -27,6 +27,7 @@ app.use(bodyParser.json());
 //log request url
 app.use('*', (req, res, next) => {
     console.log(req.baseUrl);
+    console.log(req.headers.authorization);
     next();
 });
 
