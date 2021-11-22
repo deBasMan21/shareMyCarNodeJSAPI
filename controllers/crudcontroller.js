@@ -9,6 +9,7 @@ class CrudController {
     }
 
     add = async (req, res, next) => {
+        delete req.body._id;
         const entity = new this.model(req.body);
         await entity.save();
         res.send(entity);
