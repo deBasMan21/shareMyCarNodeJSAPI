@@ -1,11 +1,6 @@
 const User = require('../src/User');
 const Ride = require('../src/Ride');
 const Car = require('../src/Car');
-const fs = require('fs');
-
-const jwt = require('node-jsonwebtoken');
-
-const RSA_PRIVATE_KEY = fs.readFileSync('jwtRS256.key');
 
 
 class CrudController {
