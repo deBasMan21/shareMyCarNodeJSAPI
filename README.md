@@ -7,8 +7,7 @@
   
   <br/>
   <br/>
-  <img src="https://img.shields.io/website?down_color=red&down_message=offline&up_color=brightgreen&up_message=online&url=https%3A%2F%2FShareMyCarWebApp.web.app"/>
-  <img src="https://img.shields.io/github/workflow/status/deBasMan21/ShareMyCarAPI/ci-cd" />
+  <img src="https://img.shields.io/website?down_color=red&down_message=offline&up_color=brightgreen&up_message=online&url=https%3A%2F%2Fhttps://sharemycar.herokuapp.com/api/car"/>
   <img src="https://img.shields.io/github/commit-activity/m/deBasMan21/ShareMyCarAPI?color=brightgreen" />
   <img src="https://img.shields.io/github/last-commit/deBasMan21/ShareMyCarAPI" />
   <img src="https://img.shields.io/github/languages/code-size/deBasMan21/ShareMyCarAPI?color=brightgreen" />
