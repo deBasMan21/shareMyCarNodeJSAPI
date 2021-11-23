@@ -50,8 +50,8 @@ module.exports = {
         const token = req.headers.authorization.substring(7);
 
         //prepare variabeles for entities
-        const car = null;
-        const user = null;
+        let car = null;
+        let user = null;
 
         //verify token
         jwt.verify(token, RSA_PRIVATE_KEY, {

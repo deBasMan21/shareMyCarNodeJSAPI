@@ -56,7 +56,6 @@ module.exports = {
         const userProps = req.body;
         const user = new User(userProps);
         user.save().then((user) => {
-            console.log(user);
             if (user) {
                 const jwtBearerToken = jwt.sign({}, RSA_PRIVATE_KEY, {
                     algorithm: 'RS256',
