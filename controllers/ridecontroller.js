@@ -80,7 +80,7 @@ module.exports = {
             }).then((rides) => {
                 //return rides
                 res.send(rides);
-            });
-        }).catch(next);
+            }).catch(next);
+        });
     }
 };
