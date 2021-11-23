@@ -77,5 +77,11 @@ module.exports = {
                 res.send(user);
             });
         });
+    },
+    getUserById(req, res, next) {
+        const id = req.params.id;
+        User.findById(id, { cars: 0 }).then((user) => {
+            res.send(user);
+        }).catch(next);
     }
 }

@@ -36,7 +36,7 @@ module.exports = {
             algorithms: ['RS256']
         }, (err, result) => {
             //find user by id from the token
-            User.findById(result.sub).then((user) => {
+            User.findById(result.sub).populate('cars').then((user) => {
                 //return cars from the user
                 res.send(user.cars);
             });

@@ -13,5 +13,8 @@ router.post('/register', authenticationController.register);
 //get user and account information
 router.get('/user', authenticationController.getUser);
 
+//get user by id
+router.get('/user/:id', authenticationController.validate, authenticationController.getUserById);
+
 
 module.exports = router;
