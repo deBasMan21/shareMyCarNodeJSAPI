@@ -52,7 +52,25 @@ module.exports = {
         }
     },
     register(req, res, next) {
+        delete req.body._id;
+        const userProps = req.body;
+        const user = new User(userProps);
+        user.save().then((user) => {
+            console.log(user);
+            if (user) {
+                const jwtBearerToken = jwt.sign({}, RSA_PRIVATE_KEY, {
+                    algorithm: 'RS256',
+                    expiresIn: '1d',
+                    subject: user._id.toString()
+                });
 
+                const today = new Date();
+                const date = new Date();
+                date.setDate(today.getDate() + 1);
+
+                res.send({ token: jwtBearerToken, expires: date });
+            }
+        });
     },
     validate(req, res, next) {
         try {
