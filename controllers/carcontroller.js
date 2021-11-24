@@ -122,8 +122,6 @@ module.exports = {
             //find user by id from token
             User.findById(result.sub).populate('cars').then(async (user) => {
                 //loop trough users cars
-                console.log(cars)
-                console.log(user.cars)
                 user.cars.forEach((car) => {
                     cars.forEach((carListCar, index) => {
                         if (car._id.toString() === carListCar._id.toString()) {
@@ -132,7 +130,6 @@ module.exports = {
                     })
                 })
                 //send entity with owner attribute back
-                console.log(cars);
                 res.send(cars);
             }).catch(next);
         });
