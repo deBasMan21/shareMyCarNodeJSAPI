@@ -23,6 +23,10 @@ const CarSchema = new Schema({
       autopopulate: true
     },
   ],
+  isOwner: {
+    type: Boolean,
+    required: false
+  }
 });
 
 CarSchema.plugin(require('mongoose-autopopulate'));

@@ -2,6 +2,8 @@ const User = require('../src/User');
 const Ride = require('../src/Ride');
 const Car = require('../src/Car');
 const fs = require('fs');
+const mongoose = require('mongoose');
+const ObjectId = mongoose.Types.ObjectId;
 
 const jwt = require('node-jsonwebtoken');
 
@@ -75,6 +77,24 @@ module.exports = {
             }).then(() => {
                 //return new car
                 res.send(car);
+            });
+        });
+    },
+    async getById(req, res, next) {
+        const entity = await Car.findById({ _id: req.params.id });
+
+        const token = req.headers.authorization.substring(7);
+        jwt.verify(token, RSA_PRIVATE_KEY, {
+            algorithms: ['RS256']
+        }, (err, result) => {
+            User.findById(result.sub).then(async (user) => {
+                entity.isOwner = false;
+                user.cars.forEach((car) => {
+                    if (car._id.toString() === entity._id.toString()) {
+                        entity.isOwner = true;
+                    }
+                })
+                res.send(entity);
             });
         });
     }

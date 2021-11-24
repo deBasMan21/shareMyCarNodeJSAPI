@@ -20,7 +20,7 @@ router.put('/:id', carCrudController.update);
 router.delete('/:id', carCrudController.delete);
 
 //get car by id
-router.get('/:id', carCrudController.getById);
+router.get('/:id', carcontroller.getById);
 
 //get all cars for user
 router.get('', carcontroller.getCarsForUser);
