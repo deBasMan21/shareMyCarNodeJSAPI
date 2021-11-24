@@ -120,11 +120,14 @@ module.exports = {
             algorithms: ['RS256']
         }, (err, result) => {
             //find user by id from token
-            User.findById(result.sub).then(async (user) => {
+            User.findById(result.sub).populate('cars').then(async (user) => {
                 //loop trough users cars
+                console.log(cars)
+                console.log(user.cars)
                 user.cars.forEach((car) => {
                     const index = cars.indexOf(car);
                     if (index) {
+                        console.log('removed' + car.name)
                         cars.splice(index);
                     }
                 })
