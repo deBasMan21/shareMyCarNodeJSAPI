@@ -76,7 +76,7 @@ module.exports = {
             //find user by the id from the token
             User.findById(result.sub).then((user) => {
                 //find rides from user
-                return Ride.find({ user: user._id });
+                return Ride.find({ user: user._id, beginDateTime: { $gte: new Date() } });
             }).then((rides) => {
                 //return rides
                 res.send(rides);
