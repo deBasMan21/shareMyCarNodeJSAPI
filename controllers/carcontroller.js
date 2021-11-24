@@ -81,21 +81,56 @@ module.exports = {
         });
     },
     async getById(req, res, next) {
+        //find car entity by id in the url
         const entity = await Car.findById({ _id: req.params.id });
 
+        //get token from headers
         const token = req.headers.authorization.substring(7);
+
+        //verify token
         jwt.verify(token, RSA_PRIVATE_KEY, {
             algorithms: ['RS256']
         }, (err, result) => {
+            //find user by id from token
             User.findById(result.sub).then(async (user) => {
+                //set owner attribute false by default
                 entity.isOwner = false;
+
+                //loop trough users cars
                 user.cars.forEach((car) => {
+                    //test if car is owned by user
                     if (car._id.toString() === entity._id.toString()) {
+                        //set owner attribute to true
                         entity.isOwner = true;
                     }
                 })
+                //send entity with owner attribute back
                 res.send(entity);
-            });
+            }).catch(next);
+        });
+    },
+    async getAllCars(req, res, next) {
+        let cars = await Car.find();
+
+        //get token from headers
+        const token = req.headers.authorization.substring(7);
+
+        //verify token
+        jwt.verify(token, RSA_PRIVATE_KEY, {
+            algorithms: ['RS256']
+        }, (err, result) => {
+            //find user by id from token
+            User.findById(result.sub).then(async (user) => {
+                //loop trough users cars
+                user.cars.forEach((car) => {
+                    const index = cars.indexOf(car);
+                    if (index) {
+                        cars.splice(index);
+                    }
+                })
+                //send entity with owner attribute back
+                res.send(cars);
+            }).catch(next);
         });
     }
 };

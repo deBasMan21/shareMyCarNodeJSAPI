@@ -25,6 +25,9 @@ router.get('/:id', carcontroller.getById);
 //get all cars for user
 router.get('', carcontroller.getCarsForUser);
 
+//get all cars TEMPORARY
+router.get('/all/get', carcontroller.getAllCars);
+
 //More advanced functions on car with rides
 //add ride and add it to car
 router.post('/:id/ride', rideController.addRide);
