@@ -132,6 +132,7 @@ module.exports = {
                     }
                 })
                 //send entity with owner attribute back
+                console.log(cars);
                 res.send(cars);
             }).catch(next);
         });
