@@ -125,11 +125,11 @@ module.exports = {
                 console.log(cars)
                 console.log(user.cars)
                 user.cars.forEach((car) => {
-                    const index = cars.indexOf(car);
-                    if (index) {
-                        console.log('removed' + car.name)
-                        cars.splice(index);
-                    }
+                    cars.forEach((carListCar, index) => {
+                        if (car._id.toString() === carListCar._id.toString()) {
+                            cars.splice(index, 1);
+                        }
+                    })
                 })
                 //send entity with owner attribute back
                 console.log(cars);
