@@ -2,6 +2,7 @@ const User = require('../src/User');
 const Ride = require('../src/Ride');
 const Car = require('../src/Car');
 const fs = require('fs');
+const neo = require('../neo');
 
 
 const jwt = require('node-jsonwebtoken');
@@ -90,7 +91,7 @@ module.exports = {
         jwt.verify(token, RSA_PRIVATE_KEY, {
             algorithms: ['RS256']
         }, (err, result) => {
-            User.findById(result.sub).then((user) => {
+            User.findById(result.sub).then(async (user) => {
                 res.send(user);
             });
         });
