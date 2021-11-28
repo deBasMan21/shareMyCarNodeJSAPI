@@ -5,6 +5,7 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const mongoose = require('mongoose');
 const app = express();
+const neo_driver = require('./neo');
 
 const tokenValidator = require('./controllers/authenticationcontroller')
 
@@ -21,6 +22,7 @@ if (process.env.NODE_ENV !== 'test') {
     } else {
         mongoose.connect(process.env.CONNECTION_STRING);
     }
+    neo_driver.connect('ShareMyCar');
 }
 
 //use json parser
