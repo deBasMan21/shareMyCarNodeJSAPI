@@ -27,11 +27,11 @@ module.exports = {
             algorithms: ['RS256']
         }, async (err, result) => {
             const session = neo.session();
-            const neoresult = await session.run(neo.makeFriend, { user1Id: result.sub, user2Id: friendId });
+            const neoresult = await session.run(neo.makeRequest, { user1Id: result.sub, user2Id: friendId });
             const friendship = neoresult.records[0].get('friendship')
             session.close();
 
-            if (friendship[0].type == "FRIENDSWITH") {
+            if (friendship[0].type == "FRIEND_REQUESTED") {
                 res.send({ succes: true });
             } else {
                 res.send({ succes: false });
@@ -61,8 +61,46 @@ module.exports = {
             const session = neo.session();
             const neoresult = await session.run(neo.removeFriend, { user1Id: result.sub, user2Id: friendId });
             session.close();
-            console.log(neoresult);
             res.send({ succes: true });
+        })
+    },
+    acceptRequest(req, res, next) {
+        const token = req.headers.authorization.substring(7);
+        const friendId = req.params.friendId;
+        jwt.verify(token, RSA_PRIVATE_KEY, {
+            algorithms: ['RS256']
+        }, async (err, result) => {
+            const session = neo.session();
+            const neoresult = await session.run(neo.acceptRequest, { user1Id: result.sub, user2Id: friendId });
+            session.close();
+            res.send({ succes: true });
+        })
+    },
+    ignoreRequest(req, res, next) {
+        const token = req.headers.authorization.substring(7);
+        const friendId = req.params.friendId;
+        jwt.verify(token, RSA_PRIVATE_KEY, {
+            algorithms: ['RS256']
+        }, async (err, result) => {
+            const session = neo.session();
+            const neoresult = await session.run(neo.ignoreRequest, { user1Id: result.sub, user2Id: friendId });
+            session.close();
+            res.send({ succes: true });
+        })
+    },
+    getRequests(req, res, next) {
+        const token = req.headers.authorization.substring(7);
+        const friendId = req.params.friendId;
+        jwt.verify(token, RSA_PRIVATE_KEY, {
+            algorithms: ['RS256']
+        }, async (err, result) => {
+            const session = neo.session();
+            const neoresult = await session.run(neo.getRequests, { user1Id: result.sub });
+            const items = neoresult.records[0].get('userIds')
+            session.close();
+
+            const friends = await User.find({ _id: { $in: items } });
+            res.send(friends);
         })
     }
 }

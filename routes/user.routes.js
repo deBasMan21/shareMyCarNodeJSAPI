@@ -17,14 +17,23 @@ router.get('/user', authenticationController.getUser);
 //get user by id
 router.get('/user/:id', authenticationController.validate, authenticationController.getUserById);
 
-//make friend with user
+//request friend with user
 router.post('/user/:friendId/friend', authenticationController.validate, friendscontroller.makeFriend);
+
+//request friend with user
+router.post('/user/:friendId/accept', authenticationController.validate, friendscontroller.makeFriend);
+
+//request friend with user
+router.delete('/user/:friendId/ignore', authenticationController.validate, friendscontroller.makeFriend);
 
 //remove friend with user
 router.delete('/user/:friendId/friend', authenticationController.validate, friendscontroller.removeFriend);
 
 //get friends for user
 router.get('/user/friends/all', authenticationController.validate, friendscontroller.getFriends);
+
+//get friends for user
+router.get('/user/friends/requests', authenticationController.validate, friendscontroller.getFriends);
 
 //get recommendations for friends
 router.get('/user/friends/recommendations', authenticationController.validate, friendscontroller.getFriendRecommendations);
