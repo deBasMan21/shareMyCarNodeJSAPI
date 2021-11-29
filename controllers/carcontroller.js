@@ -4,6 +4,7 @@ const Car = require('../src/Car');
 const fs = require('fs');
 const mongoose = require('mongoose');
 const ObjectId = mongoose.Types.ObjectId;
+const neo = require('../neo');
 
 const jwt = require('node-jsonwebtoken');
 
@@ -110,7 +111,7 @@ module.exports = {
         });
     },
     async getAllCars(req, res, next) {
-        let cars = await Car.find();
+        let cars = [];
 
         //get token from headers
         const token = req.headers.authorization.substring(7);
@@ -118,18 +119,16 @@ module.exports = {
         //verify token
         jwt.verify(token, RSA_PRIVATE_KEY, {
             algorithms: ['RS256']
-        }, (err, result) => {
-            //find user by id from token
-            User.findById(result.sub).populate('cars').then(async (user) => {
-                //loop trough users cars
-                user.cars.forEach((car) => {
-                    cars.forEach((carListCar, index) => {
-                        if (car._id.toString() === carListCar._id.toString()) {
-                            cars.splice(index, 1);
-                        }
-                    })
+        }, async (err, result) => {
+
+            const session = neo.session();
+            const neoresult = await session.run(neo.getFriends, { id: result.sub });
+            const items = neoresult.records[0].get('userIds')
+
+            User.find({ _id: { $in: items } }, { cars: 1 }).populate('cars').then((users) => {
+                users.forEach((user) => {
+                    this.cars.push(...user.cars);
                 })
-                //send entity with owner attribute back
                 res.send(cars);
             }).catch(next);
         });
