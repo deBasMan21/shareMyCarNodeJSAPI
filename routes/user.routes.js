@@ -21,7 +21,7 @@ router.get('/user/:id', authenticationController.validate, authenticationControl
 router.post('/user/:friendId/friend', authenticationController.validate, friendscontroller.makeFriend);
 
 //remove friend with user
-router.delete('/user/:friendId/friend', authenticationController.validate, friendscontroller.makeFriend);
+router.delete('/user/:friendId/friend', authenticationController.validate, friendscontroller.removeFriend);
 
 //get friends for user
 router.get('/user/friends/all', authenticationController.validate, friendscontroller.getFriends);
