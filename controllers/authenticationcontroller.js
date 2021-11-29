@@ -103,8 +103,29 @@ module.exports = {
         }).catch(next);
     },
     getAllUsers(req, res, next) {
-        User.find().then((users) => {
-            res.send(users);
-        }).catch(next);
+        const token = req.headers.authorization.substring(7);
+        jwt.verify(token, RSA_PRIVATE_KEY, {
+            algorithms: ['RS256']
+        }, (err, result) => {
+            User.find().then(async (users) => {
+                const session = neo.session();
+                const neoresult = await session.run(neo.getFriends, { id: result.sub });
+                const items = neoresult.records[0].get('userIds');
+                console.log(items);
+                console.log(users);
+
+                let returnUsers = users;
+
+                items.forEach((neouser) => {
+                    users.forEach((user) => {
+                        if (user._id.toString() == neouser) {
+                            returnUsers.splice(returnUsers.indexOf(user), 1);
+                        }
+                    })
+                })
+                res.send(returnUsers);
+            }).catch(next);
+        });
+
     }
 }
