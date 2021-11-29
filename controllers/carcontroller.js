@@ -111,7 +111,7 @@ module.exports = {
         });
     },
     async getAllCars(req, res, next) {
-        let cars = [];
+        let carlist = [];
 
         //get token from headers
         const token = req.headers.authorization.substring(7);
@@ -127,9 +127,12 @@ module.exports = {
 
             User.find({ _id: { $in: items } }, { cars: 1 }).populate('cars').then((users) => {
                 users.forEach((user) => {
-                    this.cars.push(...user.cars);
+                    carlist.push(...user.cars);
                 })
-                res.send(cars);
+                carlist.forEach((car) => {
+                    car.isOwner = false;
+                })
+                res.send(carlist);
             }).catch(next);
         });
     }
