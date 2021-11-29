@@ -51,5 +51,18 @@ module.exports = {
             const friends = await User.find({ _id: { $in: items } });
             res.send(friends);
         })
+    },
+    removeFriend(req, res, next) {
+        const token = req.headers.authorization.substring(7);
+        const friendId = req.params.friendId;
+        jwt.verify(token, RSA_PRIVATE_KEY, {
+            algorithms: ['RS256']
+        }, async (err, result) => {
+            const session = neo.session();
+            const neoresult = await session.run(neo.removeFriend, { user1Id: result.sub, user2Id: friendId });
+            session.close();
+            console.log(neoresult);
+            res.send({ succes: true });
+        })
     }
 }

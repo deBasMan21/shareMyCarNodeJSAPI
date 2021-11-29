@@ -19,5 +19,6 @@ module.exports = {
     session,
     makeFriend: 'MERGE(user1:User{id:$user1Id}) MERGE(user2: User{ id: $user2Id }) MERGE(user1)- [friends:FRIENDSWITH] -> (user2) RETURN collect(DISTINCT friends) AS friendship',
     getFriends: 'MATCH(:User{id:$id})-[:FRIENDSWITH]-(users:User) RETURN collect(DISTINCT users.id) AS userIds',
-    getFriendRecommendations: 'MATCH(:User{id:$id})-[:FRIENDSWITH]-(users:User)-[:FRIENDSWITH]-(recommended:User) RETURN collect(DISTINCT recommended.id) AS userIds'
+    getFriendRecommendations: 'MATCH(:User{id:$id})-[:FRIENDSWITH]-(users:User)-[:FRIENDSWITH]-(recommended:User) RETURN collect(DISTINCT recommended.id) AS userIds',
+    removeFriend: 'MATCH(user:User{id:$user1Id}-[relation:FRIENDSWITH]-(user2:User{id: $user2Id})) REMOVE relation'
 }
