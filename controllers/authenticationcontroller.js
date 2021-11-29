@@ -109,12 +109,13 @@ module.exports = {
         }, (err, result) => {
             User.find().then(async (users) => {
                 const session = neo.session();
-                const neoresult = await session.run(neo.getFriends, { id: result.sub });
+                const neoresult = await session.run(neo.getFriendsAndRequests, { id: result.sub });
                 const items = neoresult.records[0].get('userIds');
                 console.log(items);
                 console.log(users);
 
-                let returnUsers = users;
+                let returnUsers = [];
+                returnUsers.push(...users);
 
                 items.forEach((neouser) => {
                     users.forEach((user) => {

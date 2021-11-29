@@ -20,6 +20,7 @@ module.exports = {
     makeFriend: 'MERGE(user1:User{id:$user1Id}) MERGE(user2: User{ id: $user2Id }) MERGE(user1)- [friends:FRIENDSWITH] -> (user2) RETURN collect(DISTINCT friends) AS friendship',
     removeFriend: 'MATCH(:User{id:$user1Id})-[relation:FRIENDSWITH]-(:User{id:$user2Id}) DELETE relation',
     getFriends: 'MATCH(:User{id:$id})-[:FRIENDSWITH]-(users:User) RETURN collect(DISTINCT users.id) AS userIds',
+    getFriendsAndRequests: 'MATCH(:User{id:$id})-[]-(users:User) RETURN collect(DISTINCT users.id) AS userIds',
     getFriendRecommendations: 'MATCH(user:User{id:$id})-[:FRIENDSWITH]-(users:User)-[:FRIENDSWITH]-(recommended:User) WHERE NOT (user)-[]-(recommended) RETURN collect(DISTINCT recommended.id) AS userIds',
     makeRequest: 'MERGE(user1:User{id:$user1Id}) MERGE(user2: User{ id: $user2Id }) MERGE(user1)- [friends:FRIEND_REQUESTED] -> (user2) RETURN collect(DISTINCT friends) AS friendship',
     acceptRequest: 'MATCH(user:User{id: $user1Id})-[relation:FRIEND_REQUESTED]-(user2:User{id: $user2Id}) CALL apoc.refactor.setType(relation, "FRIENDSWITH") YIELD input, output RETURN input, output',
