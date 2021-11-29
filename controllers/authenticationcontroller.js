@@ -118,7 +118,7 @@ module.exports = {
 
                 items.forEach((neouser) => {
                     users.forEach((user) => {
-                        if (user._id.toString() == neouser) {
+                        if (user._id.toString() == neouser || user._id == result.sub) {
                             returnUsers.splice(returnUsers.indexOf(user), 1);
                         }
                     })
