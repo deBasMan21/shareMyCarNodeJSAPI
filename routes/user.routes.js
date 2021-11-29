@@ -14,6 +14,8 @@ router.post('/register', authenticationController.register);
 //get user and account information
 router.get('/user', authenticationController.getUser);
 
+router.get('/users', authenticationController.validate, authenticationController.getAllUsers);
+
 //get user by id
 router.get('/user/:id', authenticationController.validate, authenticationController.getUserById);
 
