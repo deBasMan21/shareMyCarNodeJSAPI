@@ -3,6 +3,7 @@ const Ride = require('../src/Ride');
 const Car = require('../src/Car');
 const fs = require('fs');
 const mongoose = require('mongoose');
+const ObjectId = mongoose.ObjectId;
 
 const jwt = require('node-jsonwebtoken');
 
@@ -68,13 +69,13 @@ module.exports = {
     getRidesForUser(req, res, next) {
         //get token from headers
         const token = req.headers.authorization.substring(7);
-
         //verify token
         jwt.verify(token, RSA_PRIVATE_KEY, {
             algorithms: ['RS256']
         }, (err, result) => {
             //find user by the id from the token
             User.findById(result.sub).then((user) => {
+                console.log(user._id)
                 //find rides from user
                 return Ride.find({ user: user._id, beginDateTime: { $gte: new Date() } });
             }).then((rides) => {

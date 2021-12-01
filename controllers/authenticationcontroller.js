@@ -11,10 +11,8 @@ const RSA_PRIVATE_KEY = fs.readFileSync('jwtRS256.key');
 
 function validateUser(email, password) {
     if (email && password) {
-        console.log('goed')
         return true;
     } else {
-        console.log('fout')
         return false;
     }
 }
@@ -46,10 +44,10 @@ module.exports = {
 
                 res.send({ token: jwtBearerToken, expires: date });
             } else {
-                res.status(401).send();
+                res.status(401).send({ error: 'user not found' });
             }
         } else {
-            res.status(401).send();
+            res.status(401).send({ error: 'login info invalid (email or password)' });
         }
     },
     register(req, res, next) {
@@ -70,7 +68,7 @@ module.exports = {
 
                 res.send({ token: jwtBearerToken, expires: date });
             }
-        });
+        }).catch(next);
     },
     validate(req, res, next) {
         try {
@@ -80,21 +78,25 @@ module.exports = {
             }, (err, result) => {
                 User.findById(result.sub).then((user) => {
                     next();
-                });
+                }).catch(next);
             });
         } catch (err) {
-            res.status(401).send({ message: "not authorized" });
+            res.status(401).send({ error: "not authorized" });
         }
     },
     getUser(req, res, next) {
-        const token = req.headers.authorization.substring(7);
-        jwt.verify(token, RSA_PRIVATE_KEY, {
-            algorithms: ['RS256']
-        }, (err, result) => {
-            User.findById(result.sub).then(async (user) => {
-                res.send(user);
+        try {
+            const token = req.headers.authorization.substring(7);
+            jwt.verify(token, RSA_PRIVATE_KEY, {
+                algorithms: ['RS256']
+            }, (err, result) => {
+                User.findById(result.sub).then(async (user) => {
+                    res.send(user);
+                }).catch(next);
             });
-        });
+        } catch (e) {
+            res.status(401).send({ error: "not authorized" });
+        }
     },
     getUserById(req, res, next) {
         const id = req.params.id;
@@ -111,8 +113,6 @@ module.exports = {
                 const session = neo.session();
                 const neoresult = await session.run(neo.getFriendsAndRequests, { id: result.sub });
                 const items = neoresult.records[0].get('userIds');
-                console.log(items);
-                console.log(users);
 
                 let returnUsers = [];
                 returnUsers.push(...users);
