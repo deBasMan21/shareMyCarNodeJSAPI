@@ -1,11 +1,11 @@
 const mongoose = require('mongoose');
 const assert = require('assert');
-const User = require('../src/User');
-const Ride = require('../src/Ride');
-const Car = require('../src/Car');
+const User = require('../../src/User');
+const Ride = require('../../src/Ride');
+const Car = require('../../src/Car');
 const { userInfo } = require('os');
 
-describe('Car', () => {
+describe('User', () => {
     let car, ride, user;
     const validationMessage = 'user validation failed';
 

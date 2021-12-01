@@ -61,7 +61,7 @@ module.exports = {
                 //remove ride from collection
                 Ride.findByIdAndRemove({ _id: rideId }).then(() => {
                     //return succes
-                    res.send({ succeded: true });
+                    res.send({ succeeded: true });
                 });
             }).catch(next);
     },
