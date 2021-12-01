@@ -122,8 +122,8 @@ module.exports = {
                         if (user._id.toString() == neouser || user._id == result.sub) {
                             returnUsers.splice(returnUsers.indexOf(user), 1);
                         }
-                    })
-                })
+                    });
+                });
                 res.send(returnUsers);
             }).catch(next);
         });
