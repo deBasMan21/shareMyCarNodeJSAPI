@@ -1,0 +1,240 @@
+const mongoose = require('mongoose');
+const assert = require('assert');
+const User = require('../../src/User');
+const Ride = require('../../src/Ride');
+const Car = require('../../src/Car');
+
+const chai = require('chai');
+const expect = chai.expect;
+const requester = require('../requester.spec');
+
+describe('Authenticationcontroller', () => {
+    let user, car, ride, token;
+
+    beforeEach(async () => {
+        //ARRANGE
+
+        //Create car for db
+        car = new Car({
+            name: 'Tesla model 3',
+            plate: 'BK-171-K',
+            imageSrc: 'https://www.pngall.com/wp-content/uploads/7/White-Tesla-Electric-Car-PNG-Picture.png',
+            reservations: []
+        });
+
+        //create user for db
+        user = new User({
+            name: 'Bas Buijsen',
+            email: 'bbuijsen@gmail.com',
+            phoneNumber: '0643680036'
+        });
+
+        //create ride for db
+        ride = new Ride({
+            name: 'Maccie',
+            beginDateTime: new Date('11-15-2021 12:00'),
+            endDateTime: new Date('11-15-2021 15:00'),
+            destination: {
+                name: 'McDonalds Roosendaal',
+                address: '',
+                zipCode: '',
+                city: ''
+            },
+            reservationDateTime: new Date()
+        });
+
+        //add user to ride
+        ride.user = user;
+        //add car to user
+        user.cars.push(car);
+        //add ride to car
+        car.reservations.push(ride);
+
+        //save all entities to db
+        ride = await ride.save();
+        car = await car.save();
+        user = await user.save();
+
+        //register user via endpoint
+        const createUserRes = await requester.post('/api/register').send(user);
+        //expect succes
+        expect(createUserRes).to.have.status(200);
+        //save token from registration
+        token = createUserRes.body.token;
+    })
+
+    it('login valid', async () => {
+        //ARRANGE
+
+        //create logininfo
+        const loginInfo = { email: user.email, password: 'bb' }
+
+
+        //ACT
+
+        //login via endpoint
+        const loginRes = await requester.post('/api/login').send(loginInfo);
+        //expect succes
+        expect(loginRes).to.have.status(200);
+        //save result
+        const login = loginRes.body;
+
+
+        //ASSERT
+
+        //test if login has token and expiration
+        assert(login.token != undefined);
+        assert(login.expires != undefined);
+    })
+
+    it('login invalid', async () => {
+        //ARRANGE
+
+        //create logininfo
+        const loginInfo = { email: user.email, password: '' }
+
+
+        //ACT
+
+        //login via endpoint
+        const loginRes = await requester.post('/api/login').send(loginInfo);
+        //save result
+        const errorMessage = loginRes.body;
+
+
+        //ASSERT
+
+        //test if error message is correct
+        assert(errorMessage.error === 'login info invalid (email or password)');
+    })
+
+    it('register valid', async () => {
+        //ARRANGE
+
+        //create accountinfo
+        const accountInfo = new User({ name: 'test', email: 'test@test.nl', phoneNumber: '238990872' });
+
+
+        //ACT
+
+        //register via endpoint
+        const registerRes = await requester.post('/api/register').send(accountInfo);
+        //expect succes
+        expect(registerRes).to.have.status(200)
+        //save result
+        const registration = registerRes.body;
+
+
+        //ASSERT
+
+        //test if registration has token and expiration
+        assert(registration.token != undefined);
+        assert(registration.expires != undefined);
+    })
+
+    it('register invalid', async () => {
+        //ARRANGE
+
+        //create accountinfo
+        const accountInfo = new User({ name: 'test', phoneNumber: '238990872' });
+
+
+        //ACT
+
+        //register via endpoint
+        const registerRes = await requester.post('/api/register').send(accountInfo);
+        //save result
+        const errorMessage = registerRes.body;
+
+
+        //ASSERT
+
+        //test if error message is correct
+        assert(errorMessage.error === 'user validation failed: email: User moet een email hebben');
+    })
+
+    it('getUser valid', async () => {
+        //ARRANGE
+        //happens in beforeEach
+
+
+        //ACT
+
+        //get user via endpoint
+        const userRes = await requester.get('/api/user').set('Authorization', 'Bearer ' + token);
+        //expect succes
+        expect(userRes).to.have.status(200);
+        //save result
+        const userFromApi = userRes.body;
+
+
+        //ASSERT
+
+        //test if user has fields
+        assert(userFromApi.name === user.name);
+        assert(userFromApi.email === user.email);
+    })
+
+    it('getUser invalid', async () => {
+        //ARRANGE
+        //happens in beforeEach
+
+
+        //ACT
+
+        //get user via endpoint
+        const userRes = await requester.get('/api/user');
+        //expect failure
+        expect(userRes).to.have.status(401);
+        //save error
+        const errorMessage = userRes.body;
+
+
+        //ASSERT
+
+        //test if error is correct
+        assert(errorMessage.error === 'not authorized');
+    })
+
+    it('getUserById valid', async () => {
+        //ARRANGE
+        //happens in beforeEach
+
+
+        //ACT
+
+        //get user by id via endpoint
+        const userRes = await requester.get(`/api/user/${user._id}`).set('Authorization', 'Bearer ' + token);
+        //expect succes
+        expect(userRes).to.have.status(200);
+        //save result
+        const userById = userRes.body;
+
+
+        //ASSERT
+
+        //check if user has the same fields
+        assert(userById.name === user.name);
+        assert(userById.email === user.email);
+    })
+
+    it('getUserById invalid', async () => {
+        //ARRANGE
+        //happens in beforeEach
+
+
+        //ACT
+
+        //get user by id via endpoint
+        const userRes = await requester.get(`/api/user/randomid`).set('Authorization', 'Bearer ' + token);
+        //save error
+        const errorMessage = userRes.body;
+
+
+        //ASSERT
+
+        //check if error has correct message
+        assert(errorMessage.error === 'Cast to ObjectId failed for value "randomid" (type string) at path "_id" for model "user"');
+    })
+
+})
