@@ -16,14 +16,14 @@ app.use(cors());
 mongoose.Promise = global.Promise;
 
 //connect to db for different environments
-if (process.env.NODE_ENV !== 'test') {
-    if (process.env.NODE_ENV === 'dev') {
-        mongoose.connect(process.env.DEV_CONNECTION_STRING);
-    } else {
-        mongoose.connect(process.env.CONNECTION_STRING);
-    }
+if (process.env.NODE_ENV === 'dev') {
+    mongoose.connect(process.env.DEV_CONNECTION_STRING);
+    neo_driver.connect('ShareMyCar');
+} else if (process.env.NODE_ENV === 'prod') {
+    mongoose.connect(process.env.CONNECTION_STRING);
     neo_driver.connect('ShareMyCar');
 }
+
 
 //use json parser
 app.use(bodyParser.json());
@@ -52,7 +52,7 @@ app.use('/api/ride', tokenValidator.validate, rideRoutes);
 
 //error handling
 app.use((err, req, res, next) => {
-    res.send({ error: err.message });
+    res.status(400).send({ error: err.message });
 });
 
 //no endpoint
