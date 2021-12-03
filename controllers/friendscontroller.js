@@ -26,16 +26,22 @@ module.exports = {
         jwt.verify(token, RSA_PRIVATE_KEY, {
             algorithms: ['RS256']
         }, async (err, result) => {
-            const session = neo.session();
-            const neoresult = await session.run(neo.makeRequest, { user1Id: result.sub, user2Id: friendId });
-            const friendship = neoresult.records[0].get('friendship')
-            session.close();
+            User.findById(friendId).then(async (user) => {
+                if (user) {
+                    const session = neo.session();
+                    const neoresult = await session.run(neo.makeRequest, { user1Id: result.sub, user2Id: friendId });
+                    const friendship = neoresult.records[0].get('friendship')
+                    session.close();
 
-            if (friendship[0].type == "FRIEND_REQUESTED") {
-                res.send({ succes: true });
-            } else {
-                res.send({ succes: false });
-            }
+                    if (friendship[0].type == "FRIEND_REQUESTED") {
+                        res.send({ succes: true });
+                    } else {
+                        res.send({ succes: false });
+                    }
+                } else {
+                    res.status(404).send({ error: 'could not find user' });
+                }
+            }).catch(next);
         })
     },
     getFriendRecommendations(req, res, next) {
@@ -70,10 +76,17 @@ module.exports = {
         jwt.verify(token, RSA_PRIVATE_KEY, {
             algorithms: ['RS256']
         }, async (err, result) => {
-            const session = neo.session();
-            const neoresult = await session.run(neo.acceptRequest, { user1Id: result.sub, user2Id: friendId });
-            session.close();
-            res.send({ succes: true });
+            if (err) {
+                res.status(404).send({ error: err })
+            }
+            if (result.sub) {
+                const session = neo.session();
+                const neoresult = await session.run(neo.acceptRequest, { user1Id: result.sub, user2Id: friendId });
+                session.close();
+                res.send({ succes: true });
+            } else {
+                res.status(404).send({ error: 'user not found' })
+            }
         })
     },
     ignoreRequest(req, res, next) {

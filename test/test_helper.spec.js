@@ -1,16 +1,14 @@
 const mongoose = require('mongoose');
+const neo_driver = require('../neo');
 
 mongoose.Promise = global.Promise;
 
 before((done) => {
-    mongoose.connect('mongodb://localhost/sharemycar');
-    mongoose.connection
-        .once('open', () => { done(); })
-        .on('error', (error) => {
-            console.warn('Warning', error);
-            done();
-        });
-});
+    neo_driver.connect('ShareMyCarTest');
+    mongoose.connect(process.env.TEST_CONNECTION_STRING).then(() => {
+        done();
+    });
+})
 
 beforeEach(async () => {
     const { cars, rides, users } = mongoose.connection.collections;
