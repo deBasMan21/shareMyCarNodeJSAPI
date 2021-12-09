@@ -14,9 +14,15 @@ class CrudController {
     }
 
     delete = async (req, res, next) => {
-        const entity = await this.model.findById(req.params.id);
-        await entity.delete();
-        res.status(204).send(entity);
+        const id = req.params.id;
+        const entity = await this.model.findById(id);
+        if (entity) {
+            const value = entity;
+            await entity.delete();
+            res.status(204).send(value);
+        } else {
+            res.status(400).send({ error: 'entity not found' })
+        }
     }
 
     getAll = async (req, res, next) => {

@@ -4,12 +4,22 @@ const router = express.Router();
 const authenticationController = require('../controllers/authenticationcontroller');
 const friendscontroller = require('../controllers/friendscontroller');
 
+const User = require('../src/User');
+const CrudController = require('../controllers/crudcontroller');
+const userCrudController = new CrudController(User);
+
 
 //login route uses authenticationcontroller
 router.post('/login', authenticationController.login);
 
 //register route uses authenticationcontroller
 router.post('/register', authenticationController.register);
+
+//update route uses a crudcontroller
+router.put('/user/:id', authenticationController.validate, userCrudController.update);
+
+//delete route uses a crudcontroller
+router.delete('/user/:id', authenticationController.validate, userCrudController.delete);
 
 //get user and account information
 router.get('/user', authenticationController.getUser);
