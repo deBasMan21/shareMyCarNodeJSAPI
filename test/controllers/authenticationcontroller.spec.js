@@ -14,61 +14,22 @@ describe('Authenticationcontroller', () => {
     beforeEach(async () => {
         //ARRANGE
 
-        //Create car for db
-        car = new Car({
-            name: 'Tesla model 3',
-            plate: 'BK-171-K',
-            imageSrc: 'https://www.pngall.com/wp-content/uploads/7/White-Tesla-Electric-Car-PNG-Picture.png',
-            reservations: []
-        });
-
         //create user for db
         user = new User({
             name: 'Bas Buijsen',
-            email: 'bbuijsen@gmail.com',
-            phoneNumber: '0643680036'
+            email: 'test@gmail.com',
+            phoneNumber: '0643680036',
+            key: 'password'
         });
-
-        //create ride for db
-        ride = new Ride({
-            name: 'Maccie',
-            beginDateTime: new Date('11-15-2021 12:00'),
-            endDateTime: new Date('11-15-2021 15:00'),
-            destination: {
-                name: 'McDonalds Roosendaal',
-                address: '',
-                zipCode: '',
-                city: ''
-            },
-            reservationDateTime: new Date()
-        });
-
-        //add user to ride
-        ride.user = user;
-        //add car to user
-        user.cars.push(car);
-        //add ride to car
-        car.reservations.push(ride);
-
-        //save all entities to db
-        ride = await ride.save();
-        car = await car.save();
-        user = await user.save();
-
-        //register user via endpoint
-        const createUserRes = await requester.post('/api/register').send(user);
-        //expect succes
-        expect(createUserRes).to.have.status(200);
-        //save token from registration
-        token = createUserRes.body.token;
     })
 
     it('login valid', async () => {
         //ARRANGE
 
         //create logininfo
-        const loginInfo = { email: user.email, password: 'bb' }
+        const loginInfo = { email: user.email, password: user.key }
 
+        const createUserRes = await requester.post('/api/register').send(user);
 
         //ACT
 
@@ -105,14 +66,14 @@ describe('Authenticationcontroller', () => {
         //ASSERT
 
         //test if error message is correct
-        assert(errorMessage.error === 'login info invalid (email or password)');
+        assert(errorMessage.error === "Cannot read properties of null (reading 'key')");
     })
 
     it('register valid', async () => {
         //ARRANGE
 
         //create accountinfo
-        const accountInfo = new User({ name: 'test', email: 'test@test.nl', phoneNumber: '238990872' });
+        const accountInfo = new User({ name: 'test', email: 'test@test.nl', phoneNumber: '238990872', key: 'password' });
 
 
         //ACT
@@ -150,13 +111,15 @@ describe('Authenticationcontroller', () => {
         //ASSERT
 
         //test if error message is correct
-        assert(errorMessage.error === 'user validation failed: email: User moet een email hebben');
+        assert(errorMessage.error === 'user validation failed: email: User moet een email hebben, key: Path `key` is required.');
     })
 
     it('getUser valid', async () => {
         //ARRANGE
         //happens in beforeEach
 
+        const createUserRes = await requester.post('/api/register').send(user);
+        token = createUserRes.body.token;
 
         //ACT
 
@@ -200,11 +163,23 @@ describe('Authenticationcontroller', () => {
         //ARRANGE
         //happens in beforeEach
 
+        const createUserRes = await requester.post('/api/register').send(user);
+        token = createUserRes.body.token;
+
+        let usr = new User({
+            name: 'Bas Buijsen',
+            email: 'test@gmail.com',
+            phoneNumber: '0643680036',
+            key: 'password'
+        });
+
+        usr = await usr.save();
+
 
         //ACT
 
         //get user by id via endpoint
-        const userRes = await requester.get(`/api/user/${user._id}`).set('Authorization', 'Bearer ' + token);
+        const userRes = await requester.get(`/api/user/${usr._id}`).set('Authorization', 'Bearer ' + token);
         //expect succes
         expect(userRes).to.have.status(200);
         //save result
@@ -222,6 +197,8 @@ describe('Authenticationcontroller', () => {
         //ARRANGE
         //happens in beforeEach
 
+        const createUserRes = await requester.post('/api/register').send(user);
+        token = createUserRes.body.token;
 
         //ACT
 

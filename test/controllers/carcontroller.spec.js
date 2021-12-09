@@ -11,7 +11,7 @@ const requester = require('../requester.spec');
 describe('Carcontroller', () => {
     let car, ride, user, token;
 
-    beforeEach(async () => {
+    it('getCarForRide valid', async () => {
         //ARRANGE
 
         //Create car for db
@@ -26,7 +26,8 @@ describe('Carcontroller', () => {
         user = new User({
             name: 'Bas Buijsen',
             email: 'bbuijsen@gmail.com',
-            phoneNumber: '0643680036'
+            phoneNumber: '0643680036',
+            key: 'password'
         });
 
         //create ride for db
@@ -61,11 +62,6 @@ describe('Carcontroller', () => {
         expect(createUserRes).to.have.status(200);
         //save token from registration
         token = createUserRes.body.token;
-    })
-
-    it('getCarForRide valid', async () => {
-        //ARRANGE
-        //happened in beforeEach
 
         //ACT
 
@@ -86,7 +82,55 @@ describe('Carcontroller', () => {
 
     it('getCarForRide invalid', async () => {
         //ARRANGE
-        //happened in beforeEach
+
+        //Create car for db
+        car = new Car({
+            name: 'Tesla model 3',
+            plate: 'BK-171-K',
+            imageSrc: 'https://www.pngall.com/wp-content/uploads/7/White-Tesla-Electric-Car-PNG-Picture.png',
+            reservations: []
+        });
+
+        //create user for db
+        user = new User({
+            name: 'Bas Buijsen',
+            email: 'bbuijsen@gmail.com',
+            phoneNumber: '0643680036',
+            key: 'password'
+        });
+
+        //create ride for db
+        ride = new Ride({
+            name: 'Maccie',
+            beginDateTime: new Date('11-15-2021 12:00'),
+            endDateTime: new Date('11-15-2021 15:00'),
+            destination: {
+                name: 'McDonalds Roosendaal',
+                address: '',
+                zipCode: '',
+                city: ''
+            },
+            reservationDateTime: new Date()
+        });
+
+        //add user to ride
+        ride.user = user;
+        //add car to user
+        user.cars.push(car);
+        //add ride to car
+        car.reservations.push(ride);
+
+        //save all entities to db
+        ride = await ride.save();
+        car = await car.save();
+        user = await user.save();
+
+        //register user via endpoint
+        const createUserRes = await requester.post('/api/register').send(user);
+        //expect succes
+        expect(createUserRes).to.have.status(200);
+        //save token from registration
+        token = createUserRes.body.token;
 
         //ACT
 
@@ -104,6 +148,55 @@ describe('Carcontroller', () => {
 
     it('addCar valid', async () => {
         //ARRANGE
+
+        //Create car for db
+        car = new Car({
+            name: 'Tesla model 3',
+            plate: 'BK-171-K',
+            imageSrc: 'https://www.pngall.com/wp-content/uploads/7/White-Tesla-Electric-Car-PNG-Picture.png',
+            reservations: []
+        });
+
+        //create user for db
+        user = new User({
+            name: 'Bas Buijsen',
+            email: 'bbuijsen@gmail.com',
+            phoneNumber: '0643680036',
+            key: 'password'
+        });
+
+        //create ride for db
+        ride = new Ride({
+            name: 'Maccie',
+            beginDateTime: new Date('11-15-2021 12:00'),
+            endDateTime: new Date('11-15-2021 15:00'),
+            destination: {
+                name: 'McDonalds Roosendaal',
+                address: '',
+                zipCode: '',
+                city: ''
+            },
+            reservationDateTime: new Date()
+        });
+
+        //add user to ride
+        ride.user = user;
+        //add car to user
+        user.cars.push(car);
+        //add ride to car
+        car.reservations.push(ride);
+
+        //save all entities to db
+        ride = await ride.save();
+        car = await car.save();
+        user = await user.save();
+
+        //register user via endpoint
+        const createUserRes = await requester.post('/api/register').send(user);
+        //expect succes
+        expect(createUserRes).to.have.status(200);
+        //save token from registration
+        token = createUserRes.body.token;
 
         //create car for request
         createCar = new Car({
@@ -134,6 +227,55 @@ describe('Carcontroller', () => {
     it('addCar invalid', async () => {
         //ARRANGE
 
+        //Create car for db
+        car = new Car({
+            name: 'Tesla model 3',
+            plate: 'BK-171-K',
+            imageSrc: 'https://www.pngall.com/wp-content/uploads/7/White-Tesla-Electric-Car-PNG-Picture.png',
+            reservations: []
+        });
+
+        //create user for db
+        user = new User({
+            name: 'Bas Buijsen',
+            email: 'bbuijsen@gmail.com',
+            phoneNumber: '0643680036',
+            key: 'password'
+        });
+
+        //create ride for db
+        ride = new Ride({
+            name: 'Maccie',
+            beginDateTime: new Date('11-15-2021 12:00'),
+            endDateTime: new Date('11-15-2021 15:00'),
+            destination: {
+                name: 'McDonalds Roosendaal',
+                address: '',
+                zipCode: '',
+                city: ''
+            },
+            reservationDateTime: new Date()
+        });
+
+        //add user to ride
+        ride.user = user;
+        //add car to user
+        user.cars.push(car);
+        //add ride to car
+        car.reservations.push(ride);
+
+        //save all entities to db
+        ride = await ride.save();
+        car = await car.save();
+        user = await user.save();
+
+        //register user via endpoint
+        const createUserRes = await requester.post('/api/register').send(user);
+        //expect succes
+        expect(createUserRes).to.have.status(200);
+        //save token from registration
+        token = createUserRes.body.token;
+
         //create car for request
         createCar = new Car({
             plate: 'BK-171-B',
@@ -158,7 +300,55 @@ describe('Carcontroller', () => {
 
     it('getById valid', async () => {
         //ARRANGE
-        //happens in beforeEach
+
+        //Create car for db
+        car = new Car({
+            name: 'Tesla model 3',
+            plate: 'BK-171-K',
+            imageSrc: 'https://www.pngall.com/wp-content/uploads/7/White-Tesla-Electric-Car-PNG-Picture.png',
+            reservations: []
+        });
+
+        //create user for db
+        user = new User({
+            name: 'Bas Buijsen',
+            email: 'bbuijsen@gmail.com',
+            phoneNumber: '0643680036',
+            key: 'password'
+        });
+
+        //create ride for db
+        ride = new Ride({
+            name: 'Maccie',
+            beginDateTime: new Date('11-15-2021 12:00'),
+            endDateTime: new Date('11-15-2021 15:00'),
+            destination: {
+                name: 'McDonalds Roosendaal',
+                address: '',
+                zipCode: '',
+                city: ''
+            },
+            reservationDateTime: new Date()
+        });
+
+        //add user to ride
+        ride.user = user;
+        //add car to user
+        user.cars.push(car);
+        //add ride to car
+        car.reservations.push(ride);
+
+        //save all entities to db
+        ride = await ride.save();
+        car = await car.save();
+        user = await user.save();
+
+        //register user via endpoint
+        const createUserRes = await requester.post('/api/register').send(user);
+        //expect succes
+        expect(createUserRes).to.have.status(200);
+        //save token from registration
+        token = createUserRes.body.token;
 
 
         //ACT
@@ -180,7 +370,55 @@ describe('Carcontroller', () => {
 
     it('getById invalid', async () => {
         //ARRANGE
-        //happens in beforeEach
+
+        //Create car for db
+        car = new Car({
+            name: 'Tesla model 3',
+            plate: 'BK-171-K',
+            imageSrc: 'https://www.pngall.com/wp-content/uploads/7/White-Tesla-Electric-Car-PNG-Picture.png',
+            reservations: []
+        });
+
+        //create user for db
+        user = new User({
+            name: 'Bas Buijsen',
+            email: 'bbuijsen@gmail.com',
+            phoneNumber: '0643680036',
+            key: 'password'
+        });
+
+        //create ride for db
+        ride = new Ride({
+            name: 'Maccie',
+            beginDateTime: new Date('11-15-2021 12:00'),
+            endDateTime: new Date('11-15-2021 15:00'),
+            destination: {
+                name: 'McDonalds Roosendaal',
+                address: '',
+                zipCode: '',
+                city: ''
+            },
+            reservationDateTime: new Date()
+        });
+
+        //add user to ride
+        ride.user = user;
+        //add car to user
+        user.cars.push(car);
+        //add ride to car
+        car.reservations.push(ride);
+
+        //save all entities to db
+        ride = await ride.save();
+        car = await car.save();
+        user = await user.save();
+
+        //register user via endpoint
+        const createUserRes = await requester.post('/api/register').send(user);
+        //expect succes
+        expect(createUserRes).to.have.status(200);
+        //save token from registration
+        token = createUserRes.body.token;
 
 
         //ACT

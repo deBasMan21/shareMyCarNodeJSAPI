@@ -17,20 +17,23 @@ describe('Friendscontroller', () => {
         user = new User({
             name: 'Bas Buijsen',
             email: 'bbuijsen@gmail.com',
-            phoneNumber: '0643680036'
+            phoneNumber: '0643680036',
+            key: '$2b$10$C/k9KGaTpXf0LGcVEB75Ye4MROlkg6FSFF6EO3KYerT65m7HuCQGu'
         });
 
         //create friend for user
         userFriend = new User({
             name: 'Bas Buijsen',
             email: 'bbuijsen@gmail.com',
-            phoneNumber: '0643680036'
+            phoneNumber: '0643680036',
+            key: '$2b$10$C/k9KGaTpXf0LGcVEB75Ye4MROlkg6FSFF6EO3KYerT65m7HuCQGu'
         });
 
         userFriendFriend = new User({
             name: 'Bas Buijsen',
             email: 'bbuijsen@gmail.com',
-            phoneNumber: '0643680036'
+            phoneNumber: '0643680036',
+            key: '$2b$10$C/k9KGaTpXf0LGcVEB75Ye4MROlkg6FSFF6EO3KYerT65m7HuCQGu'
         });
 
         //save them to db
@@ -38,8 +41,9 @@ describe('Friendscontroller', () => {
         userFriend = await userFriend.save();
         userFriendFriend = await userFriendFriend.save();
 
+
         //create logininfo for user to get token
-        const loginInfo = { email: user.email, password: 'nn' };
+        const loginInfo = { email: user.email, password: 'password' };
 
         //login user via endpoint
         const createUserRes = await requester.post('/api/login').send(loginInfo);
@@ -48,6 +52,7 @@ describe('Friendscontroller', () => {
         //save token from registration
         token = createUserRes.body.token;
 
+
         //make session
         const session = neo.session();
         //empty db
@@ -55,8 +60,6 @@ describe('Friendscontroller', () => {
     })
 
     it('makeFriend valid', async () => {
-        //ARRANGE
-        //happens in beforeEach
 
 
         //ACT
@@ -76,8 +79,6 @@ describe('Friendscontroller', () => {
     })
 
     it('makeFriend invalid', async () => {
-        //ARRANGE
-        //happens in beforeEach
 
 
         //ACT
@@ -97,7 +98,7 @@ describe('Friendscontroller', () => {
     })
 
     it('getFriends valid', async () => {
-        //ARRANGE
+
 
         //make session
         const session = neo.session();
@@ -123,8 +124,6 @@ describe('Friendscontroller', () => {
     })
 
     it('getFriends invalid', async () => {
-        //ARRANGE
-        //happens in beforeEach
 
 
         //ACT
@@ -144,7 +143,7 @@ describe('Friendscontroller', () => {
     })
 
     it('getFriendRecommendations valid', async () => {
-        //ARRANGE
+
 
         //make session
         const session = neo.session();
@@ -173,7 +172,7 @@ describe('Friendscontroller', () => {
     })
 
     it('getFriendRecommendations invalid', async () => {
-        //ARRANGE
+
 
         //make session
         const session = neo.session();
@@ -200,7 +199,7 @@ describe('Friendscontroller', () => {
     })
 
     it('removeFriend valid', async () => {
-        //ARRANGE
+
 
         //make session
         const session = neo.session();
@@ -225,7 +224,7 @@ describe('Friendscontroller', () => {
     })
 
     it('removeFriend invalid', async () => {
-        //ARRANGE
+
 
         //make session
         const session = neo.session();
@@ -250,7 +249,7 @@ describe('Friendscontroller', () => {
     })
 
     it('acceptRequest valid', async () => {
-        //ARRANGE
+
 
         //make session
         const session = neo.session();
@@ -275,7 +274,7 @@ describe('Friendscontroller', () => {
     })
 
     it('acceptRequest invalid', async () => {
-        //ARRANGE
+
 
         //make session
         const session = neo.session();
@@ -300,7 +299,7 @@ describe('Friendscontroller', () => {
     })
 
     it('ignoreRequest valid', async () => {
-        //ARRANGE
+
 
         //make session
         const session = neo.session();
@@ -325,7 +324,7 @@ describe('Friendscontroller', () => {
     })
 
     it('ignoreRequest invalid', async () => {
-        //ARRANGE
+
 
         //make session
         const session = neo.session();
@@ -350,7 +349,6 @@ describe('Friendscontroller', () => {
     })
 
     it('getRequests valid', async () => {
-        //ARRANGE
 
         //make session
         const session = neo.session();
@@ -376,7 +374,6 @@ describe('Friendscontroller', () => {
     })
 
     it('getRequests invalid', async () => {
-        //ARRANGE
 
         //make session
         const session = neo.session();

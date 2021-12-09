@@ -25,7 +25,8 @@ describe('Ride', () => {
         user = new User({
             name: 'Bas Buijsen',
             email: 'bbuijsen@gmail.com',
-            phoneNumber: '123456789'
+            phoneNumber: '123456789',
+            key: 'password'
         })
 
         ride.user = user;

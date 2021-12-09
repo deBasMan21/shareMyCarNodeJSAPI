@@ -15,52 +15,52 @@ describe('CRUD entities journey', () => {
         //ARRANGE
 
         //Create car for db
-        car = new Car({
-            name: 'Tesla model 3',
-            plate: 'BK-171-K',
-            imageSrc: 'https://www.pngall.com/wp-content/uploads/7/White-Tesla-Electric-Car-PNG-Picture.png',
-            reservations: []
-        });
+        // car = new Car({
+        //     name: 'Tesla model 3',
+        //     plate: 'BK-171-K',
+        //     imageSrc: 'https://www.pngall.com/wp-content/uploads/7/White-Tesla-Electric-Car-PNG-Picture.png',
+        //     reservations: []
+        // });
 
-        //create user for db
-        user = new User({
-            name: 'Bas Buijsen',
-            email: 'bbuijsen@gmail.com',
-            phoneNumber: '0643680036'
-        });
+        // //create user for db
+        // user = new User({
+        //     name: 'Bas Buijsen',
+        //     email: 'bbuijsen@gmail.com',
+        //     phoneNumber: '0643680036'
+        // });
 
-        //create ride for db
-        ride = new Ride({
-            name: 'Maccie',
-            beginDateTime: new Date('11-15-2021 12:00'),
-            endDateTime: new Date('11-15-2021 15:00'),
-            destination: {
-                name: 'McDonalds Roosendaal',
-                address: '',
-                zipCode: '',
-                city: ''
-            },
-            reservationDateTime: new Date()
-        });
+        // //create ride for db
+        // ride = new Ride({
+        //     name: 'Maccie',
+        //     beginDateTime: new Date('11-15-2021 12:00'),
+        //     endDateTime: new Date('11-15-2021 15:00'),
+        //     destination: {
+        //         name: 'McDonalds Roosendaal',
+        //         address: '',
+        //         zipCode: '',
+        //         city: ''
+        //     },
+        //     reservationDateTime: new Date()
+        // });
 
-        //add user to ride
-        ride.user = user;
-        //add car to user
-        user.cars.push(car);
-        //add ride to car
-        car.reservations.push(ride);
+        // //add user to ride
+        // ride.user = user;
+        // //add car to user
+        // user.cars.push(car);
+        // //add ride to car
+        // car.reservations.push(ride);
 
-        //save all entities to db
-        ride = await ride.save();
-        car = await car.save();
-        user = await user.save();
+        // //save all entities to db
+        // ride = await ride.save();
+        // car = await car.save();
+        // user = await user.save();
 
-        //register user via endpoint
-        const createUserRes = await requester.post('/api/register').send(user);
-        //expect succes
-        expect(createUserRes).to.have.status(200);
-        //save token from registration
-        token = createUserRes.body.token;
+        // //register user via endpoint
+        // const createUserRes = await requester.post('/api/register').send(user);
+        // //expect succes
+        // expect(createUserRes).to.have.status(200);
+        // //save token from registration
+        // token = createUserRes.body.token;
     })
 
     it('Create entities', async () => {
@@ -77,7 +77,8 @@ describe('CRUD entities journey', () => {
         let user = new User({
             name: 'Bas Buijsen',
             email: 'test@gmail.com',
-            phoneNumber: '0643680036'
+            phoneNumber: '0643680036',
+            key: 'password'
         });
 
         //create ride to post to the api
@@ -165,12 +166,62 @@ describe('CRUD entities journey', () => {
 
     it('Delete entities', async () => {
         //ARRANGE
-        //happens in beforeEach
+
+        //Create car for db
+        car = new Car({
+            name: 'Tesla model 3',
+            plate: 'BK-171-K',
+            imageSrc: 'https://www.pngall.com/wp-content/uploads/7/White-Tesla-Electric-Car-PNG-Picture.png',
+            reservations: []
+        });
+
+        //create user for db
+        user = new User({
+            name: 'Bas Buijsen',
+            email: 'bbuijsen@gmail.com',
+            phoneNumber: '0643680036',
+            key: 'password'
+        });
+
+        //create ride for db
+        ride = new Ride({
+            name: 'Maccie',
+            beginDateTime: new Date('11-15-2021 12:00'),
+            endDateTime: new Date('11-15-2021 15:00'),
+            destination: {
+                name: 'McDonalds Roosendaal',
+                address: '',
+                zipCode: '',
+                city: ''
+            },
+            reservationDateTime: new Date()
+        });
+
+        //add user to ride
+        ride.user = user;
+        //add car to user
+        user.cars.push(car);
+        //add ride to car
+        car.reservations.push(ride);
+
+        //save all entities to db
+        ride = await ride.save();
+        car = await car.save();
+        user = await user.save();
+
+        //register user via endpoint
+        const createUserRes = await requester.post('/api/register').send(user);
+        //expect succes
+        expect(createUserRes).to.have.status(200);
+        //save token from registration
+        token = createUserRes.body.token;
+
 
         //ACT
 
         //delete ride via endpoint
         const deleteRideRes = await requester.delete(`/api/car/${car._id}/ride/${ride._id}`).set('Authorization', 'Bearer ' + token);
+
         //expect succes
         expect(deleteRideRes).to.have.status(200);
         //assert if the deletion succeeded
@@ -188,6 +239,55 @@ describe('CRUD entities journey', () => {
 
     it('Update entities', async () => {
         //ARRANGE
+
+        //Create car for db
+        car = new Car({
+            name: 'Tesla model 3',
+            plate: 'BK-171-K',
+            imageSrc: 'https://www.pngall.com/wp-content/uploads/7/White-Tesla-Electric-Car-PNG-Picture.png',
+            reservations: []
+        });
+
+        //create user for db
+        user = new User({
+            name: 'Bas Buijsen',
+            email: 'bbuijsen@gmail.com',
+            phoneNumber: '0643680036',
+            key: 'password'
+        });
+
+        //create ride for db
+        ride = new Ride({
+            name: 'Maccie',
+            beginDateTime: new Date('11-15-2021 12:00'),
+            endDateTime: new Date('11-15-2021 15:00'),
+            destination: {
+                name: 'McDonalds Roosendaal',
+                address: '',
+                zipCode: '',
+                city: ''
+            },
+            reservationDateTime: new Date()
+        });
+
+        //add user to ride
+        ride.user = user;
+        //add car to user
+        user.cars.push(car);
+        //add ride to car
+        car.reservations.push(ride);
+
+        //save all entities to db
+        ride = await ride.save();
+        car = await car.save();
+        user = await user.save();
+
+        //register user via endpoint
+        const createUserRes = await requester.post('/api/register').send(user);
+        //expect succes
+        expect(createUserRes).to.have.status(200);
+        //save token from registration
+        token = createUserRes.body.token;
 
         //create object to update ride
         const updateFieldsRide = { name: 'updatedRideName' };
@@ -242,7 +342,55 @@ describe('CRUD entities journey', () => {
 
     it('Get entities', async () => {
         //ARRANGE
-        //happens in beforeEach
+
+        //Create car for db
+        car = new Car({
+            name: 'Tesla model 3',
+            plate: 'BK-171-K',
+            imageSrc: 'https://www.pngall.com/wp-content/uploads/7/White-Tesla-Electric-Car-PNG-Picture.png',
+            reservations: []
+        });
+
+        //create user for db
+        user = new User({
+            name: 'Bas Buijsen',
+            email: 'bbuijsen@gmail.com',
+            phoneNumber: '0643680036',
+            key: 'password'
+        });
+
+        //create ride for db
+        ride = new Ride({
+            name: 'Maccie',
+            beginDateTime: new Date('11-15-2021 12:00'),
+            endDateTime: new Date('11-15-2021 15:00'),
+            destination: {
+                name: 'McDonalds Roosendaal',
+                address: '',
+                zipCode: '',
+                city: ''
+            },
+            reservationDateTime: new Date()
+        });
+
+        //add user to ride
+        ride.user = user;
+        //add car to user
+        user.cars.push(car);
+        //add ride to car
+        car.reservations.push(ride);
+
+        //save all entities to db
+        ride = await ride.save();
+        car = await car.save();
+        user = await user.save();
+
+        //register user via endpoint
+        const createUserRes = await requester.post('/api/register').send(user);
+        //expect succes
+        expect(createUserRes).to.have.status(200);
+        //save token from registration
+        token = createUserRes.body.token;
 
         //ACT
 
