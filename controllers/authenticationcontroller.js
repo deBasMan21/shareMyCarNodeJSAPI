@@ -3,72 +3,65 @@ const Ride = require('../src/Ride');
 const Car = require('../src/Car');
 const fs = require('fs');
 const neo = require('../neo');
+const bcrypt = require('bcrypt');
+const saltRounds = 10;
 
 
 const jwt = require('node-jsonwebtoken');
 
 const RSA_PRIVATE_KEY = fs.readFileSync('jwtRS256.key');
 
-function validateUser(email, password) {
-    if (email && password) {
-        return true;
-    } else {
-        return false;
-    }
-}
-
-async function findUserForEmail(email) {
-    const user = await User.findOne({ email: email });
-    return user;
-}
-
 module.exports = {
     async login(req, res, next) {
         const email = req.body.email;
         const password = req.body.password;
+        User.findOne({ email: email }).then((user) => {
+            bcrypt.compare(password, user.key, function (err, result) {
+                if (result == true) {
+                    const id = user._id.toString();
 
-        if (validateUser(email, password) === true) {
-            const user = await findUserForEmail(email);
-            if (user) {
-                const id = user._id.toString();
+                    const jwtBearerToken = jwt.sign({}, RSA_PRIVATE_KEY, {
+                        algorithm: 'RS256',
+                        expiresIn: '1d',
+                        subject: id
+                    });
 
-                const jwtBearerToken = jwt.sign({}, RSA_PRIVATE_KEY, {
-                    algorithm: 'RS256',
-                    expiresIn: '1d',
-                    subject: id
-                });
+                    const today = new Date();
+                    const date = new Date();
+                    date.setDate(today.getDate() + 1);
 
-                const today = new Date();
-                const date = new Date();
-                date.setDate(today.getDate() + 1);
-
-                res.send({ token: jwtBearerToken, expires: date });
-            } else {
-                res.status(401).send({ error: 'user not found' });
-            }
-        } else {
-            res.status(401).send({ error: 'login info invalid (email or password)' });
-        }
+                    res.send({ token: jwtBearerToken, expires: date });
+                } else {
+                    res.status(401).send({ error: 'login info invalid (email or password)' });
+                }
+            });
+        }).catch(next);
     },
     register(req, res, next) {
         delete req.body._id;
-        const userProps = req.body;
-        const user = new User(userProps);
-        user.save().then((user) => {
-            if (user) {
-                const jwtBearerToken = jwt.sign({}, RSA_PRIVATE_KEY, {
-                    algorithm: 'RS256',
-                    expiresIn: '1d',
-                    subject: user._id.toString()
-                });
+        let userProps = req.body;
+        bcrypt.genSalt(saltRounds, function (err, salt) {
+            bcrypt.hash(userProps.key, salt, function (err, hash) {
+                console.log(hash);
+                userProps.key = hash;
+                const user = new User(userProps);
+                user.save().then((user) => {
+                    if (user) {
+                        const jwtBearerToken = jwt.sign({}, RSA_PRIVATE_KEY, {
+                            algorithm: 'RS256',
+                            expiresIn: '1d',
+                            subject: user._id.toString()
+                        });
 
-                const today = new Date();
-                const date = new Date();
-                date.setDate(today.getDate() + 1);
+                        const today = new Date();
+                        const date = new Date();
+                        date.setDate(today.getDate() + 1);
 
-                res.send({ token: jwtBearerToken, expires: date });
-            }
-        }).catch(next);
+                        res.send({ token: jwtBearerToken, expires: date });
+                    }
+                }).catch(next);
+            });
+        });
     },
     validate(req, res, next) {
         try {

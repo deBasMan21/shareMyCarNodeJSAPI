@@ -12,6 +12,10 @@ const UserSchema = new Schema({
     unique: [true, "User moet een uniek email hebben"],
   },
   phoneNumber: String,
+  key: {
+    type: String,
+    required: [true]
+  },
   cars: [
     {
       type: Schema.Types.ObjectId,
