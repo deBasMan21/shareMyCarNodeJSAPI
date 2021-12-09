@@ -42,7 +42,6 @@ module.exports = {
         let userProps = req.body;
         bcrypt.genSalt(saltRounds, function (err, salt) {
             bcrypt.hash(userProps.key, salt, function (err, hash) {
-                console.log(hash);
                 userProps.key = hash;
                 const user = new User(userProps);
                 user.save().then((user) => {
