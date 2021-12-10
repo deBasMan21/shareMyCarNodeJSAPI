@@ -41,7 +41,7 @@ module.exports = {
     register(req, res, next) {
         delete req.body._id;
         let userProps = req.body;
-        userProps.email = userProps.toLowerCase();
+        userProps.email = userProps.email.toLowerCase();
         bcrypt.genSalt(saltRounds, function (err, salt) {
             bcrypt.hash(userProps.key, salt, function (err, hash) {
                 userProps.key = hash;
