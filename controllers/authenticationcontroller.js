@@ -13,7 +13,8 @@ const RSA_PRIVATE_KEY = fs.readFileSync('jwtRS256.key');
 
 module.exports = {
     async login(req, res, next) {
-        const email = req.body.email;
+        const email = req.body.email.toLowerCase();
+        console.log(email)
         const password = req.body.password;
         User.findOne({ email: email }).then((user) => {
             bcrypt.compare(password, user.key, function (err, result) {
@@ -40,6 +41,7 @@ module.exports = {
     register(req, res, next) {
         delete req.body._id;
         let userProps = req.body;
+        userProps.email = userProps.toLowerCase();
         bcrypt.genSalt(saltRounds, function (err, salt) {
             bcrypt.hash(userProps.key, salt, function (err, hash) {
                 userProps.key = hash;
