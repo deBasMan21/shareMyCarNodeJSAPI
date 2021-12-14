@@ -93,27 +93,6 @@ describe('Authenticationcontroller', () => {
         assert(registration.expires != undefined);
     })
 
-    it('register invalid', async () => {
-        //ARRANGE
-
-        //create accountinfo
-        const accountInfo = new User({ name: 'test', phoneNumber: '238990872' });
-
-
-        //ACT
-
-        //register via endpoint
-        const registerRes = await requester.post('/api/register').send(accountInfo);
-        //save result
-        const errorMessage = registerRes.body;
-
-
-        //ASSERT
-
-        //test if error message is correct
-        assert(errorMessage.error === 'user validation failed: email: User moet een email hebben, key: Path `key` is required.');
-    })
-
     it('getUser valid', async () => {
         //ARRANGE
         //happens in beforeEach

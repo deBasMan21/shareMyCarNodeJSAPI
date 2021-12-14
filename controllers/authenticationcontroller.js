@@ -14,7 +14,6 @@ const RSA_PRIVATE_KEY = fs.readFileSync('jwtRS256.key');
 module.exports = {
     async login(req, res, next) {
         const email = req.body.email.toLowerCase();
-        console.log(email)
         const password = req.body.password;
         User.findOne({ email: email }).then((user) => {
             bcrypt.compare(password, user.key, function (err, result) {
